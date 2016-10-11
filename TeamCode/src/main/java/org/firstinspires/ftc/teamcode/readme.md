@@ -1,4 +1,4 @@
-## TeamCode Module - this is a test
+## TeamCode Module
 
 Welcome!
 
