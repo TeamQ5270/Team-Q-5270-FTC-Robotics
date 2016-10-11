@@ -1,4 +1,5 @@
-## TeamCode Module - this is a test
+### John Kesler's teamcode module.
+## TeamCode Module
 
 Welcome!
 
