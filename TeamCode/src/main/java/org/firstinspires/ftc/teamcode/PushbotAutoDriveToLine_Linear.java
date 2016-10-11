@@ -32,40 +32,43 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.LightSensor;
 
-@TeleOp(name="Basic Tank Driving Mode", group="Linear Opmode")  // @Autonomous(...) is the other common choice
-public class BasicTankDrive extends LinearOpMode {
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
-    private ElapsedTime runtime = new ElapsedTime();
-    DcMotor leftMotor = null;
-    DcMotor rightMotor = null;
+@Autonomous(name="Pushbot: Auto Drive To Line", group="Pushbot")
+public class PushbotAutoDriveToLine_Linear extends LinearOpMode {
+
+    DcMotor leftMotor;
+    DcMotor rightMotor;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-        leftMotor  = hardwareMap.dcMotor.get("left motor");
+
+
+        leftMotor = hardwareMap.dcMotor.get("left motor");
         rightMotor = hardwareMap.dcMotor.get("right motor");
 
-        leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        // Wait for the game to start (driver presses PLAY)
+        while (!isStarted()) {
+            idle();
+        }
 
-        waitForStart();
-        runtime.reset();
+        // Start the robot moving forward, and then begin looking for a white line.
+        leftMotor.setPower(1);
+        rightMotor.setPower(1);
 
+        // run until the white line is seen OR the driver presses STOP;
         while (opModeIsActive()) {
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
-
-            leftMotor.setPower(-gamepad1.left_stick_y);
-            rightMotor.setPower(-gamepad1.right_stick_y);
-
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
+
+        // Stop all motors
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
     }
 }
