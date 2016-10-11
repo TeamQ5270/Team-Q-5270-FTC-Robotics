@@ -59,7 +59,7 @@ public class PushbotAutoDriveToLine_Linear extends LinearOpMode {
         }
 
         // Start the robot moving forward, and then begin looking for a white line.
-        leftMotor.setPower(1);
+        leftMotor.setPower(-1);
         rightMotor.setPower(1);
 
         // run until the white line is seen OR the driver presses STOP;
