@@ -63,7 +63,7 @@ public class BasicTankDrive extends LinearOpMode {
             telemetry.update();
 
             leftMotor.setPower(-gamepad1.left_stick_y);
-            rightMotor.setPower(-gamepad1.right_stick_y);
+            rightMotor.setPower(gamepad1.right_stick_y);
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
