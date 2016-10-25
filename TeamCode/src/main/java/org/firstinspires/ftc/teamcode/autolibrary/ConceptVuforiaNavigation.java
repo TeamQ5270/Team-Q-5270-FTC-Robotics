@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.autolibrary;
 
 import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -121,8 +121,13 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
          * and paste it in to your code as the value of the 'vuforiaLicenseKey' field of the
          * {@link Parameters} instance with which you initialize Vuforia.
          */
+
+        //License number
+        String license = "Ae4bn1n/////AAAAGUB2l6bUfkZVny2Q0jaLYIIKoUC+uWr6iohCfs1afyuNIj+MEulVW0XJYqxXl+uxWNp7NhbPu4JpnvE0ihnUCT+Zop08Zs2xxzOHOZpbhiVN9qIXypUAzJjj2fIGsjfhgzxRRlcU1di6VtRRjINxBV9d1HXtR67wB4OdYEmHiqLDh0fZ3uXaNIKG6tISezLaa32TJJXOIIlkTTxlCf2ER+kTUYfBn8AKKMy/FQ+bIFkl+6zWVC95qfOc1+WybBBgBYcYL966AzUZWAi38sgw1TS7jymeLQNiJRt7RCDJ+aiVgFM3WZhkbu0pDu0e1sehKTsJejwkBWYLMVz8UeEGuesc6hrhiVjZdUYRZjJoOmD1";
+
+
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
+        parameters.vuforiaLicenseKey = license;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
