@@ -30,12 +30,12 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -85,7 +85,7 @@ import java.util.List;
  */
 
 @Autonomous(name="Concept: Vuforia Navigation", group ="Concept")
-public class ConceptVuforiaNavigation extends LinearOpMode {
+public class EthanAutonomous extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";
 
@@ -121,8 +121,8 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
          * and paste it in to your code as the value of the 'vuforiaLicenseKey' field of the
          * {@link Parameters} instance with which you initialize Vuforia.
          */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(com.qualcomm.ftcrobotcontroller.R.id.cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "Ae4bn1n/////AAAAGUB2l6bUfkZVny2Q0jaLYIIKoUC+uWr6iohCfs1afyuNIj+MEulVW0XJYqxXl+uxWNp7NhbPu4JpnvE0ihnUCT+Zop08Zs2xxzOHOZpbhiVN9qIXypUAzJjj2fIGsjfhgzxRRlcU1di6VtRRjINxBV9d1HXtR67wB4OdYEmHiqLDh0fZ3uXaNIKG6tISezLaa32TJJXOIIlkTTxlCf2ER+kTUYfBn8AKKMy/FQ+bIFkl+6zWVC95qfOc1+WybBBgBYcYL966AzUZWAi38sgw1TS7jymeLQNiJRt7RCDJ+aiVgFM3WZhkbu0pDu0e1sehKTsJejwkBWYLMVz8UeEGuesc6hrhiVjZdUYRZjJoOmD1";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
@@ -318,6 +318,33 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
                 telemetry.addData("Pos", "Unknown");
             }
             telemetry.update();
+            Servo servo = null;
+            DcMotor leftMotor = null;
+            DcMotor rightMotor = null;
+            servo.setPosition(1);
+            long endTime = System.currentTimeMillis() + 30000;
+            while(System.currentTimeMillis() < endTime){
+                String coordinatesString = format(blueTargetLocationOnField);
+                String[] coordinatesStringArray = coordinatesString.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+                int[] coordinates = new int[coordinatesStringArray.length];
+                for (int i = 0; i < coordinatesStringArray.length; i++) {
+                    coordinates[i] = Integer.parseInt(coordinatesStringArray[i]);
+                }
+                if(coordinates[2] > 95){
+                    leftMotor.setPower(0.75);
+                    rightMotor.setPower(0.25);
+                }else{
+                    if(coordinates[2] < 85){
+                        leftMotor.setPower(0.25);
+                        rightMotor.setPower(0.75);
+                    }
+                    else{
+                        leftMotor.setPower(0.5);
+                        rightMotor.setPower(0.5);
+                    }
+
+                }
+            }
             idle();
         }
     }
