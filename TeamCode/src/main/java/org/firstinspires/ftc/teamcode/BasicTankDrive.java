@@ -1,35 +1,3 @@
-/*
-Copyright (c) 2016 Robert Atkinson
-
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification,
-are permitted (subject to the limitations in the disclaimer below) provided that
-the following conditions are met:
-
-Redistributions of source code must retain the above copyright notice, this list
-of conditions and the following disclaimer.
-
-Redistributions in binary form must reproduce the above copyright notice, this
-list of conditions and the following disclaimer in the documentation and/or
-other materials provided with the distribution.
-
-Neither the name of Robert Atkinson nor the names of his contributors may be used to
-endorse or promote products derived from this software without specific prior
-written permission.
-
-NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
-LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -37,73 +5,123 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Basic Tank Driving Mode", group="Linear Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="Teleop Driving", group="Linear Opmode")  // @Autonomous(...) is the other common choice
 public class BasicTankDrive extends LinearOpMode {
 
-    private ElapsedTime runtime = new ElapsedTime();
-    DcMotor leftMotor = null;
-    DcMotor rightMotor = null;
-    DcMotor capBallMotor = null;
-    DcMotor capBallMotor2 = null;
-    DcMotor ballShooterMotor = null;
-    Servo   leftServo = null;
-    Servo   rightServo = null;
+
+
+    int timeout = 0; //Timeout flag, to make sure that inversion does not happen over and over
+
+    private ElapsedTime runtime = new ElapsedTime(); //Timer
+
+
+    DcMotor leftMotorDriving = null; //This is the left driving motor
+    DcMotor rightMotorDriving = null; //This is the right driving motor
+
+    DcMotor capBallMotor1 = null; //This is one of the cap ball motors
+    DcMotor capBallMotor2 = null; //This is one of the cap ball motors
+    Servo leftServoCapBall = null; //This is one of the cap ball SERVOS
+    Servo rightServoCapBall = null; //This is one of the cap ball SERVOS
+
+    DcMotor ballShooterShooterMotor = null; //This is the ball shooter's shooter motor
+    DcMotor ballShooterLiftMotor = null; //This is the ball shooter's lifter motor
+    DcMotor ballShooterIntakeMotor = null; //This is the ball shooter's intake box motor
+
+    BeaconButtonPushers leftServoBeacon; //This is the left beacon button pusher
+    BeaconButtonPushers rightServoBeacon; //This is the right beacon button pusher
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        leftMotor  = hardwareMap.dcMotor.get("left motor");
-        rightMotor = hardwareMap.dcMotor.get("right motor");
-        capBallMotor = hardwareMap.dcMotor.get("cap ball motor");
-        capBallMotor2 = hardwareMap.dcMotor.get("cap ball motor2");
-        ballShooterMotor = hardwareMap.dcMotor.get("ball shooter motor");
-        leftServo = hardwareMap.servo.get("left servo");
-        rightServo = hardwareMap.servo.get("right servo");
 
-        leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        capBallMotor.setDirection(DcMotor.Direction.FORWARD);
-        capBallMotor2.setDirection(DcMotor.Direction.FORWARD);
-        ballShooterMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftServo.setPosition(0);
-        rightServo.setPosition(0);
 
-        waitForStart();
-        runtime.reset();
 
-        while (opModeIsActive()) {
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
+        leftMotorDriving  = hardwareMap.dcMotor.get("left motor"); //This is the left driving motor
+        rightMotorDriving = hardwareMap.dcMotor.get("right motor"); //This is the right driving motor
 
-            leftMotor.setPower(-gamepad1.left_stick_y);
-            rightMotor.setPower(gamepad1.right_stick_y);
-            if(gamepad1.a) {
-                capBallMotor.setPower(0.25f);
-                capBallMotor2.setPower(0.25f);
+        leftMotorDriving.setDirection((DcMotor.Direction.FORWARD)); //This is the left motor driving being set to Forwards mode
+        rightMotorDriving.setDirection((DcMotor.Direction.FORWARD)); //This is the right driving motor being set to Forwards mode
+
+
+
+        capBallMotor1 = hardwareMap.dcMotor.get("cap ball motor 1"); //This is a capball motor
+        capBallMotor2 = hardwareMap.dcMotor.get("cap ball motor 2"); //This is a capball motor
+        leftServoCapBall = hardwareMap.servo.get("left servo"); //This is the left capball servo
+        rightServoCapBall = hardwareMap.servo.get("right servo"); //This is the right capball servo
+
+        capBallMotor1.setDirection((DcMotor.Direction.FORWARD)); //This is the first capball motor being set to forwards mode
+        capBallMotor2.setDirection((DcMotor.Direction.FORWARD)); //This is the second capball motor being set to forwards mode
+        leftServoCapBall.setPosition(0); //This is the left servo cap ball being set to starting position
+        rightServoCapBall.setPosition(0); //This is the right servo cap ball being set to starting position
+
+
+
+        ballShooterShooterMotor = hardwareMap.dcMotor.get("ball shooter shooter motor"); //This is the ball shooter's shooter motor
+        ballShooterLiftMotor = hardwareMap.dcMotor.get("ball shooter lifter motor"); //Ball shooter lifter motor
+        ballShooterIntakeMotor = hardwareMap.dcMotor.get("ball shooter intake motor"); //Ball shooter intake motor
+
+        ballShooterShooterMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's SHOOTER motor being set to Forwards mode
+        ballShooterLiftMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's LIFT motor being set to Forwards mode
+        ballShooterIntakeMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's INTAKE motor being set to Forwards mode
+
+
+        leftServoBeacon = new BeaconButtonPushers("beacon left servo",0,150); //This is the left servo on the beacon button pusher
+        rightServoBeacon = new BeaconButtonPushers("beacon right servo",0,150); //This is the right servo on the beacon button pusher
+
+
+
+        boolean inverted = false; //Set up the inverted control flag. Defaults to false.
+
+        waitForStart();  //Wait for the game to start
+        runtime.reset(); //Reset the timer before it is supposed to start
+
+        while (opModeIsActive()) { //While opmode is running
+
+            //Datalogging!
+            telemetry.addData("Status", "Run Time: " + runtime.toString()); //Tell the user how long the code has been running
+            telemetry.update();                                             //Pushes to terminal
+
+/*
+            //Movement
+            if (!inverted) { //Perform normally if not inverted
+                leftMotor.setPower(-gamepad1.left_stick_y);  //Set the left motor's power to be that of the gamepad's left stick
+                rightMotor.setPower(gamepad1.right_stick_y); //Set the right motor's power to be that of the gamepad's right stick
             }
-            if(gamepad1.b) {
-                capBallMotor.setPower(0f);
-                capBallMotor2.setPower(0f);
+
+            if (inverted) { //Perform with reverse inversion if inverted
+                leftMotor.setPower(gamepad1.left_stick_y);    //Set the left motor's power to be that of the gamepad's left stick, except inverted.
+                rightMotor.setPower(-gamepad1.right_stick_y); //Set the light motor's power to be that of the gamepad's right stick, except inverted.
             }
-            if(gamepad1.y) {
-                ballShooterMotor.setPower(0.9f);
+
+            //Toggle inversion if the invert button is pushed and the timeout is in the area that it needs to be in so that it can not be spammed.
+            if (gamepad1.x&&timeout>=75) {         //If the inversion button is pushed
+                inverted = !inverted; //make the inverted flag the oppposite of the inversion flag. INVERTS
+                timeout=0; //This resets the timeout
             }
-            else {
-                ballShooterMotor.setPower(0f);
+
+            //If the left servo toggle (the left trigger) is pushed
+            if (gamepad1.left_trigger) {
+              //toggle the servo's position
+              leftServoBeacon.togglePosition();
             }
-            if(gamepad1.left_trigger > 0.1) {
-                leftServo.setPosition(0.9f);
-            }else{
-                leftServo.setPosition(0f);
+            //If the right servo toggle (the right trigger) is pushed
+            if (gamepad1.right_trigger) {
+              //toggle the servo's position
+              rightServoBeacon.togglePosition();
             }
-            if(gamepad1.right_trigger > 0.1) {
-                rightServo.setPosition(0.9f);
-            }else{
-                rightServo.setPosition(0f);
-            }
+
+
+*/
+            //This line increments the timeout for the inversion mode
+            timeout++;
+
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
     }
