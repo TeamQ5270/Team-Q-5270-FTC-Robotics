@@ -38,19 +38,26 @@ public class MotorVaryingSpeedTest extends LinearOpMode {
     motor = hardwareMap.dcMotor.get("Testing Motor");
     telemetry.addData("Status", "Initialized");
 
-    for (float speed = 0; speed < 1; speed += 0.2) {
-      motor.setPower(speed);
-      try {
-        idle();
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-    run = false;
-    motor.setPower(0);
-
     while (opModeIsActive()) {
       telemetry.addData("Status", "Run Time: " + runtime.toString());
+      if (run) {
+          run = true;
+
+
+          for (float speed = 0; speed < 1; speed += 0.2) {
+
+              motor.setPower(speed);
+              sleep(5000);
+              try {
+                  idle();
+              } catch (InterruptedException e) {
+                  e.printStackTrace();
+              }
+          }
+          run = false;
+          motor.setPower(0);
+
+      }
       idle();
     }
   }
