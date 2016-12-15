@@ -124,11 +124,44 @@ public class BasicTankDrive extends LinearOpMode {
 
 
             //BALLCAPPING CONTROL CODE
-            //TODO: Add in Modi's code here
+            //capBAll
+            if(gamepad1.a){
+                capBallMotor1.setPower(0.25);
+                capBallMotor2.setPower(0.25);
+            }else if(gamepad1.b){
+                capBallMotor1.setPower(-0.25);
+                capBallMotor2.setPower(-0.25);
+            }else{
+                capBallMotor1.setPower(0);
+                capBallMotor2.setPower(0);
+            }
 
 
             //BALLSHOOTER CONTROL CODE
-            //TODO: Add in Ball Shooter code
+            //TODO: Add in the proper values
+            //if the ball shooter motor toggle button is pressed
+            if (gamepad2.y) { //If the y button is pressed, activate the intake lift motor
+                ballShooterIntakeMotor.setPower(1);
+            }
+            if (gamepad2.a) { //If the a button is pressed, lower the intake motor lifter
+                ballShooterIntakeMotor.setPower(-1);
+            }
+
+            //if the ball shooter ramp motor button is pressed
+            if (gamepad2.x) {
+                ballShooterLiftMotor.setPower(1);
+            }
+            if (gamepad2.b) {
+                ballShooterLiftMotor.setPower(-1);
+            }
+
+            //if the ball shooter shooter button is pressed
+            if (gamepad2.dpad_up) {
+                ballShooterShooterMotor.setPower(1);
+            }
+            if (gamepad2.dpad_down) {
+                ballShooterShooterMotor.setPower(-1);
+            }
 
 
             //OPMODE DEFAULT CODE
