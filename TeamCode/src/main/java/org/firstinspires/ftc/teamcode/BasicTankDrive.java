@@ -12,39 +12,43 @@ public class BasicTankDrive extends LinearOpMode {
 
 
     //TIMEOUT
-    int timeout = 0; //Timeout flag, to make sure that inversion does not happen over and over
+    private int timeout = 0; //Timeout flag, to make sure that inversion does not happen over and over
+
+    //LIMITING FLAG FOR SPEED
+    //TODO: Figure out the actual needed speed limiting flag
+    private int speedLimitingFlag = 2; //The code DIVIDES by this
 
     //INVERSION
-    int inverted = 1; //Inversion flag, to make the motors run inverted on the press of a button
+    private int inverted = 1; //Inversion flag, to make the motors run inverted on the press of a button
 
     //TIMER
     private ElapsedTime runtime = new ElapsedTime(); //Timer
 
     //DRIVING
-    DcMotor leftMotorDriving = null; //This is the left driving motor
-    DcMotor rightMotorDriving = null; //This is the right driving motor
+    private DcMotor leftMotorDriving = null; //This is the left driving motor
+    private DcMotor rightMotorDriving = null; //This is the right driving motor
 
     //CAPPING
-    DcMotor capBallMotor1 = null; //This is one of the cap ball motors
-    DcMotor capBallMotor2 = null; //This is one of the cap ball motors
-    Servos leftServoCapBall = null; //This is one of the cap ball SERVOS
-    Servos rightServoCapBall = null; //This is one of the cap ball SERVOS
+    private DcMotor capBallMotor1 = null; //This is one of the cap ball motors
+    private DcMotor capBallMotor2 = null; //This is one of the cap ball motors
+    private Servos leftServoCapBall = null; //This is one of the cap ball SERVOS
+    private Servos rightServoCapBall = null; //This is one of the cap ball SERVOS
 
     //SHOOTING
-    DcMotor ballShooterShooterMotor = null; //This is the ball shooter's shooter motor
-    DcMotor ballShooterLiftMotor = null; //This is the ball shooter's lifter motor
-    DcMotor ballShooterIntakeMotor = null; //This is the ball shooter's intake box motor
+    private DcMotor ballShooterShooterMotor = null; //This is the ball shooter's shooter motor
+    private DcMotor ballShooterLiftMotor = null; //This is the ball shooter's lifter motor
+    private DcMotor ballShooterIntakeMotor = null; //This is the ball shooter's intake box motor
 
     //BEACONBUTTONPUSHERS
-    Servos leftServoBeacon; //This is the left beacon button pusher
-    Servos rightServoBeacon; //This is the right beacon button pusher
+    private Servos leftServoBeacon; //This is the left beacon button pusher
+    private Servos rightServoBeacon; //This is the right beacon button pusher
 
 
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        //DELARE TELEMETRY
+        //DECLARE TELEMETRY
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -93,8 +97,8 @@ public class BasicTankDrive extends LinearOpMode {
 
             //DRIVING CONTROL CODE
             //This will make the robot move
-            leftMotorDriving.setPower(-inverted*gamepad1.left_stick_y);  //Set the left motor's power to be that of the gamepad's left stick
-            rightMotorDriving.setPower(inverted*gamepad1.right_stick_y); //Set the right motor's power to be that of the gamepad's right stick
+            leftMotorDriving.setPower((-inverted*gamepad1.left_stick_y)/speedLimitingFlag);  //Set the left motor's power to be that of the gamepad's left stick
+            rightMotorDriving.setPower((inverted*gamepad1.right_stick_y)/speedLimitingFlag); //Set the right motor's power to be that of the gamepad's right stick
 
             //Toggle inversion if the invert button is pushed and the timeout is in the area that it needs to be in so that it can not be spammed.
             if (gamepad1.x&&timeout>=75) {         //If the inversion button is pushed
@@ -117,6 +121,14 @@ public class BasicTankDrive extends LinearOpMode {
               //toggle the servo's position
               rightServoBeacon.togglePosition();
             }
+
+
+            //BALLCAPPING CONTROL CODE
+            //TODO: Add in Modi's code here
+
+
+            //BALLSHOOTER CONTROL CODE
+            //TODO: Add in Ball Shooter code
 
 
             //OPMODE DEFAULT CODE
