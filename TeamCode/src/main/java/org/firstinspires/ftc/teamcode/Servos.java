@@ -14,10 +14,11 @@ public class Servos extends BasicTankDrive {
 
 
   //This is the decleration method for the beaconButtonPusher class
-  public Servos(String name, int inMin, int inMax) { //name of the servo: minimum position: maximum position
+  public Servos(String name, int inMin, int inMax, int defaultPosition) { //name of the servo: minimum position: maximum position
     beaconButtonPusherServo = hardwareMap.servo.get(name); //Set the class's servo object to be the servo that is specified
     minPosition = inMin;
     maxPosition = inMax;
+    setSpecificPosition(defaultPosition);
   }
 
 
