@@ -4,13 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Demonstrates empty OpMode
  */
-@Autonomous(name = "MotorVaryingSpeedTest", group = "Concept")
+@TeleOp(name = "MotorVaryingSpeedTest", group = "Concept")
 public class MotorVaryingSpeedTest extends LinearOpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
@@ -37,11 +38,11 @@ public class MotorVaryingSpeedTest extends LinearOpMode {
   public void runOpMode() throws InterruptedException {
     motor = hardwareMap.dcMotor.get("Testing Motor");
     telemetry.addData("Status", "Initialized");
-
+    waitForStart();
     while (opModeIsActive()) {
       telemetry.addData("Status", "Run Time: " + runtime.toString());
+      run = true;
       if (run) {
-          run = true;
 
 
           for (float speed = 0; speed < 1; speed += 0.2) {

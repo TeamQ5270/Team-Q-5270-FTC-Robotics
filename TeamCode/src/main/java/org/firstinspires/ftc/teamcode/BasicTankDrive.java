@@ -23,15 +23,15 @@ public class BasicTankDrive extends LinearOpMode {
 
     DcMotor capBallMotor1 = null; //This is one of the cap ball motors
     DcMotor capBallMotor2 = null; //This is one of the cap ball motors
-    Servo leftServoCapBall = null; //This is one of the cap ball SERVOS
-    Servo rightServoCapBall = null; //This is one of the cap ball SERVOS
+    Servos leftServoCapBall = null; //This is one of the cap ball SERVOS
+    Servos rightServoCapBall = null; //This is one of the cap ball SERVOS
 
     DcMotor ballShooterShooterMotor = null; //This is the ball shooter's shooter motor
     DcMotor ballShooterLiftMotor = null; //This is the ball shooter's lifter motor
     DcMotor ballShooterIntakeMotor = null; //This is the ball shooter's intake box motor
 
-    BeaconButtonPushers leftServoBeacon; //This is the left beacon button pusher
-    BeaconButtonPushers rightServoBeacon; //This is the right beacon button pusher
+    Servos leftServoBeacon; //This is the left beacon button pusher
+    Servos rightServoBeacon; //This is the right beacon button pusher
 
 
 
@@ -53,13 +53,13 @@ public class BasicTankDrive extends LinearOpMode {
 
         capBallMotor1 = hardwareMap.dcMotor.get("cap ball motor 1"); //This is a capball motor
         capBallMotor2 = hardwareMap.dcMotor.get("cap ball motor 2"); //This is a capball motor
-        leftServoCapBall = hardwareMap.servo.get("left servo"); //This is the left capball servo
-        rightServoCapBall = hardwareMap.servo.get("right servo"); //This is the right capball servo
+        leftServoCapBall = new Servos("left servo", 0, 150); //This is the left capball servo
+        rightServoCapBall = new Servos("right servo", 0, 150); //This is the right capball servo
 
         capBallMotor1.setDirection((DcMotor.Direction.FORWARD)); //This is the first capball motor being set to forwards mode
         capBallMotor2.setDirection((DcMotor.Direction.FORWARD)); //This is the second capball motor being set to forwards mode
-        leftServoCapBall.setPosition(0); //This is the left servo cap ball being set to starting position
-        rightServoCapBall.setPosition(0); //This is the right servo cap ball being set to starting position
+        leftServoCapBall.setSpecificPosition(0); //This is the left servo cap ball being set to starting position
+        rightServoCapBall.setSpecificPosition(0); //This is the right servo cap ball being set to starting position
 
 
 
@@ -72,8 +72,8 @@ public class BasicTankDrive extends LinearOpMode {
         ballShooterIntakeMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's INTAKE motor being set to Forwards mode
 
 
-        leftServoBeacon = new BeaconButtonPushers("beacon left servo",0,150); //This is the left servo on the beacon button pusher
-        rightServoBeacon = new BeaconButtonPushers("beacon right servo",0,150); //This is the right servo on the beacon button pusher
+        leftServoBeacon = new Servos("beacon left servo",0,150); //This is the left servo on the beacon button pusher
+        rightServoBeacon = new Servos("beacon right servo",0,150); //This is the right servo on the beacon button pusher
 
 
 
@@ -88,16 +88,16 @@ public class BasicTankDrive extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString()); //Tell the user how long the code has been running
             telemetry.update();                                             //Pushes to terminal
 
-/*
+
             //Movement
             if (!inverted) { //Perform normally if not inverted
-                leftMotor.setPower(-gamepad1.left_stick_y);  //Set the left motor's power to be that of the gamepad's left stick
-                rightMotor.setPower(gamepad1.right_stick_y); //Set the right motor's power to be that of the gamepad's right stick
+                leftMotorDriving.setPower(-gamepad1.left_stick_y);  //Set the left motor's power to be that of the gamepad's left stick
+                rightMotorDriving.setPower(gamepad1.right_stick_y); //Set the right motor's power to be that of the gamepad's right stick
             }
 
             if (inverted) { //Perform with reverse inversion if inverted
-                leftMotor.setPower(gamepad1.left_stick_y);    //Set the left motor's power to be that of the gamepad's left stick, except inverted.
-                rightMotor.setPower(-gamepad1.right_stick_y); //Set the light motor's power to be that of the gamepad's right stick, except inverted.
+                leftMotorDriving.setPower(gamepad1.left_stick_y);    //Set the left motor's power to be that of the gamepad's left stick, except inverted.
+                rightMotorDriving.setPower(-gamepad1.right_stick_y); //Set the light motor's power to be that of the gamepad's right stick, except inverted.
             }
 
             //Toggle inversion if the invert button is pushed and the timeout is in the area that it needs to be in so that it can not be spammed.
@@ -107,18 +107,18 @@ public class BasicTankDrive extends LinearOpMode {
             }
 
             //If the left servo toggle (the left trigger) is pushed
-            if (gamepad1.left_trigger) {
+            if (gamepad1.left_trigger>0.4) {
               //toggle the servo's position
               leftServoBeacon.togglePosition();
             }
             //If the right servo toggle (the right trigger) is pushed
-            if (gamepad1.right_trigger) {
+            if (gamepad1.right_trigger>0.4) {
               //toggle the servo's position
               rightServoBeacon.togglePosition();
             }
 
 
-*/
+
             //This line increments the timeout for the inversion mode
             timeout++;
 
