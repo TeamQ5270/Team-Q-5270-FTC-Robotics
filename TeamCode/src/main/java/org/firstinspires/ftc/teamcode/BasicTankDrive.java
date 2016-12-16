@@ -33,6 +33,7 @@ public class BasicTankDrive extends LinearOpMode {
     private DcMotor capBallMotor2 = null; //This is one of the cap ball motors
     private Servos leftServoCapBall = null; //This is one of the cap ball SERVOS
     private Servos rightServoCapBall = null; //This is one of the cap ball SERVOS
+    private float cappingSpeed = 0.25f; //This is the speed at which the capping motors will move
 
     //SHOOTING
     private DcMotor ballShooterShooterMotor = null; //This is the ball shooter's shooter motor
@@ -61,7 +62,7 @@ public class BasicTankDrive extends LinearOpMode {
         rightMotorDriving.setDirection((DcMotor.Direction.FORWARD)); //This is the right driving motor being set to Forwards mode
 
         //CAPPING MOTORS
-        //set up capping motors
+           //set up capping motors
         capBallMotor1 = hardwareMap.dcMotor.get("cap ball motor 1"); //This is a capball motor
         capBallMotor2 = hardwareMap.dcMotor.get("cap ball motor 2"); //This is a capball motor
         //set up capping servos
@@ -125,20 +126,20 @@ public class BasicTankDrive extends LinearOpMode {
 
             //BALLCAPPING CONTROL CODE
             //capBAll
-            if(gamepad1.a){
-                capBallMotor1.setPower(0.25);
-                capBallMotor2.setPower(0.25);
-            }else if(gamepad1.b){
-                capBallMotor1.setPower(-0.25);
-                capBallMotor2.setPower(-0.25);
-            }else{
+            if(gamepad1.a){ //if the a button is pressed, move the cap lift
+                capBallMotor1.setPower(cappingSpeed);
+                capBallMotor2.setPower(cappingSpeed);
+            }else if(gamepad1.b){ //if the b button is pressed, do the opposite
+                capBallMotor1.setPower(-cappingSpeed);
+                capBallMotor2.setPower(-cappingSpeed);
+            }else{ //Dont do anything.
                 capBallMotor1.setPower(0);
                 capBallMotor2.setPower(0);
             }
 
 
             //BALLSHOOTER CONTROL CODE
-            //TODO: Add in the proper values
+            //TODO: Add in the proper values!!!!
             //if the ball shooter motor toggle button is pressed
             if (gamepad2.y) { //If the y button is pressed, activate the intake lift motor
                 ballShooterIntakeMotor.setPower(1);
@@ -148,18 +149,18 @@ public class BasicTankDrive extends LinearOpMode {
             }
 
             //if the ball shooter ramp motor button is pressed
-            if (gamepad2.x) {
+            if (gamepad2.x) { //If the x button is pressed, activate the lifter in one direction
                 ballShooterLiftMotor.setPower(1);
             }
-            if (gamepad2.b) {
+            if (gamepad2.b) { //If the b button is pressed, activate the lifter in the opposite direction
                 ballShooterLiftMotor.setPower(-1);
             }
 
             //if the ball shooter shooter button is pressed
-            if (gamepad2.dpad_up) {
+            if (gamepad2.dpad_up) { //If the up button is pressed on the dpad, turn the shooter one way
                 ballShooterShooterMotor.setPower(1);
             }
-            if (gamepad2.dpad_down) {
+            if (gamepad2.dpad_down) { //If the down button is pressed on the dpad, turn the shooter the other way
                 ballShooterShooterMotor.setPower(-1);
             }
 
