@@ -62,16 +62,18 @@ public class BasicTankDrive extends LinearOpMode {
         rightMotorDriving.setDirection((DcMotor.Direction.FORWARD)); //This is the right driving motor being set to Forwards mode
 
         //CAPPING MOTORS
-           //set up capping motors
+        //set up capping motors
         capBallMotor1 = hardwareMap.dcMotor.get("cap ball motor 1"); //This is a capball motor
         capBallMotor2 = hardwareMap.dcMotor.get("cap ball motor 2"); //This is a capball motor
         //set up capping servos
         //TODO: Set the positions to be correct for default
-        leftServoCapBall = new Servos("left servo", 0, 150, 0); //This is the left capball servo
-        rightServoCapBall = new Servos("right servo", 0, 150, 0); //This is the right capball servo
+        //leftServoCapBall = new Servos("left servo", 0, 150, 0); //This is the left capball servo
+        //rightServoCapBall = new Servos("right servo", 0, 150, 0); //This is the right capball servo
         //set variables to mode
         capBallMotor1.setDirection((DcMotor.Direction.FORWARD)); //This is the first capball motor being set to forwards mode
         capBallMotor2.setDirection((DcMotor.Direction.FORWARD)); //This is the second capball motor being set to forwards mode
+
+        /*
 
         //BALL SHOOTER MOTORS
         //set ball shooter motors to be dcMotor variables
@@ -83,11 +85,15 @@ public class BasicTankDrive extends LinearOpMode {
         ballShooterLiftMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's LIFT motor being set to Forwards mode
         ballShooterIntakeMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's INTAKE motor being set to Forwards mode
 
+
+        */
+
+
         //BEACONBUTTONPUSHERS
         //set beaconbuttonpushers to be their variables
         //TODO: Set the positions to be correct for default
-        leftServoBeacon = new Servos("beacon left servo", 0, 150, 0); //This is the left servo on the beacon button pusher
-        rightServoBeacon = new Servos("beacon right servo", 0, 150, 0); //This is the right servo on the beacon button pusher
+        //leftServoBeacon = new Servos("beacon left servo", 0, 150, 0); //This is the left servo on the beacon button pusher
+        //rightServoBeacon = new Servos("beacon right servo", 0, 150, 0); //This is the right servo on the beacon button pusher
 
         //OPMODE CODE
         waitForStart();  //Wait for the game to start
@@ -110,6 +116,7 @@ public class BasicTankDrive extends LinearOpMode {
             timeout++;
 
 
+            /*
             //BEACONBUTTONPUSHER CONTROL CODE
             //If the left servo toggle (the left trigger) is pushed
             if (gamepad1.left_trigger>0.4) {
@@ -122,6 +129,7 @@ public class BasicTankDrive extends LinearOpMode {
               //toggle the servo's position
               rightServoBeacon.togglePosition();
             }
+            */
 
 
             //BALLCAPPING CONTROL CODE
@@ -138,6 +146,7 @@ public class BasicTankDrive extends LinearOpMode {
             }
 
 
+            /*
             //BALLSHOOTER CONTROL CODE
             //TODO: Add in the proper values!!!!
             //if the ball shooter motor toggle button is pressed
@@ -163,6 +172,7 @@ public class BasicTankDrive extends LinearOpMode {
             if (gamepad2.dpad_down) { //If the down button is pressed on the dpad, turn the shooter the other way
                 ballShooterShooterMotor.setPower(-1);
             }
+            */
 
 
             //OPMODE DEFAULT CODE
