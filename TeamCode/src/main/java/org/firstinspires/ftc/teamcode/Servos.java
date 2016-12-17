@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-public class BeaconButtonPushers extends BasicTankDrive {
+public class Servos extends BasicTankDrive {
 
   //Variable declerations
   int position = 0; //This is the position of the servo of the beaconButtonPusher
@@ -14,10 +14,11 @@ public class BeaconButtonPushers extends BasicTankDrive {
 
 
   //This is the decleration method for the beaconButtonPusher class
-  public BeaconButtonPushers(String name, int inMin, int inMax) { //name of the servo: minimum position: maximum position
+  public Servos(String name, int inMin, int inMax, int defaultPosition) { //name of the servo: minimum position: maximum position
     beaconButtonPusherServo = hardwareMap.servo.get(name); //Set the class's servo object to be the servo that is specified
     minPosition = inMin;
     maxPosition = inMax;
+    setSpecificPosition(defaultPosition);
   }
 
 
@@ -42,6 +43,12 @@ public class BeaconButtonPushers extends BasicTankDrive {
       }
     }
     return true;
+  }
+
+
+  //This function will set the position of the servo to a specific position
+  public void setSpecificPosition(int position) {
+    beaconButtonPusherServo.setPosition(position);
   }
 
 
