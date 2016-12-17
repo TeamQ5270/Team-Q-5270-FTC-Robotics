@@ -38,5 +38,6 @@ Matthew Modi wants to get to States and Beyond and improve his knowledge of tech
 *Sheridan Page:* 
 
 Sheridan Page is also unsure what he wants to do in the future, though he also wants to colonize Mars (and preferably sooner than 40 years). He was involved in Middle School robotics for 3 years, though he never was on an FLL team. He joined the team because he enjoys robotics and computer programming, and he likes to use power tools. As a newcomer to FTC robotics, he doesn't have the most qualifications, but he does have three years of Lego robotics experience. He also did Arduino Club during the 8th grade. He hopes to contribute his programming and building skills.
+
 **************************************************************************************
 
