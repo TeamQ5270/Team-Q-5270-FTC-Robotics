@@ -34,15 +34,15 @@ public class BasicTankDrive extends LinearOpMode {
     private DcMotor capBallMotor2 = null; //This is one of the cap ball motors
     private Servo leftServoCapBall = null; //This is one of the cap ball SERVOS
     private Servo rightServoCapBall = null; //This is one of the cap ball SERVOS
-    private double leftServoCapBallMin = 1.0d;
+    private double leftServoCapBallMin = 0.5d;
     private double leftServoCapBallMax = 0.3d;
     private boolean leftServoCapBallExtended = false;
-    private double rightServoCapBallMin = 1.0d;
+    private double rightServoCapBallMin = 0.5d;
     private double rightServoCapBallMax = 0.3d;
     private boolean rightServoCapBallExtended = false;
     private float cappingSpeed = 0.25f; //This is the speed at which the capping motors will move
     private int cappingTimeout = 0;
-    private boolean changed = false;
+    private boolean changed = true;
 
     //SHOOTING
     private DcMotor ballShooterShooterMotor = null; //This is the ball shooter's shooter motor
@@ -53,7 +53,7 @@ public class BasicTankDrive extends LinearOpMode {
     private Servo leftServoBeacon; //This is the left beacon button pusher
     private Servo rightServoBeacon; //This is the right beacon button pusher
     private double leftServoBeaconMin = 0.0d;
-    private double leftServoBeaconMax = 0.9d;
+    private double leftServoBeaconMax = 0.3d;
     private boolean leftServoBeaconExtended = false;
     private double rightServoBeaconMin = 0.0d;
     private double rightServoBeaconMax = 0.9d;
@@ -202,6 +202,11 @@ public class BasicTankDrive extends LinearOpMode {
             }
 
             cappingTimeout++;
+
+            if (gamepad2.y) {
+                leftServoCapBall.setPosition(leftServoCapBallMin);
+                rightServoCapBall.setPosition(rightServoCapBallMin);
+            }
 
 
 
