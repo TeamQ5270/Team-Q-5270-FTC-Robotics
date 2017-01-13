@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -31,9 +32,17 @@ public class BasicTankDrive extends LinearOpMode {
     //CAPPING
     private DcMotor capBallMotor1 = null; //This is one of the cap ball motors
     private DcMotor capBallMotor2 = null; //This is one of the cap ball motors
-    private Servos leftServoCapBall = null; //This is one of the cap ball SERVOS
-    private Servos rightServoCapBall = null; //This is one of the cap ball SERVOS
+    private Servo leftServoCapBall = null; //This is one of the cap ball SERVOS
+    private Servo rightServoCapBall = null; //This is one of the cap ball SERVOS
+    private double leftServoCapBallMin = 1.0d;
+    private double leftServoCapBallMax = 0.3d;
+    private boolean leftServoCapBallExtended = false;
+    private double rightServoCapBallMin = 1.0d;
+    private double rightServoCapBallMax = 0.3d;
+    private boolean rightServoCapBallExtended = false;
     private float cappingSpeed = 0.25f; //This is the speed at which the capping motors will move
+    private int cappingTimeout = 0;
+    private boolean changed = false;
 
     //SHOOTING
     private DcMotor ballShooterShooterMotor = null; //This is the ball shooter's shooter motor
@@ -41,8 +50,16 @@ public class BasicTankDrive extends LinearOpMode {
     private DcMotor ballShooterIntakeMotor = null; //This is the ball shooter's intake box motor
 
     //BEACONBUTTONPUSHERS
-    private Servos leftServoBeacon; //This is the left beacon button pusher
-    private Servos rightServoBeacon; //This is the right beacon button pusher
+    private Servo leftServoBeacon; //This is the left beacon button pusher
+    private Servo rightServoBeacon; //This is the right beacon button pusher
+    private double leftServoBeaconMin = 0.0d;
+    private double leftServoBeaconMax = 0.9d;
+    private boolean leftServoBeaconExtended = false;
+    private double rightServoBeaconMin = 0.0d;
+    private double rightServoBeaconMax = 0.9d;
+    private boolean rightServoBeaconExtended = false;
+    private int beaconTimeout = 0;
+    private boolean beaconRan = false;
 
 
 
@@ -67,14 +84,13 @@ public class BasicTankDrive extends LinearOpMode {
         capBallMotor2 = hardwareMap.dcMotor.get("cap ball motor 2"); //This is a capball motor
         //set up capping servos
         //TODO: Set the positions to be correct for default
-        //leftServoCapBall = new Servos("cap ball left servo", 0, 150, 0); //This is the left capball servo
-        //rightServoCapBall = new Servos("cap ball right servo", 0, 150, 0); //This is the right capball servo
+        leftServoCapBall = hardwareMap.servo.get("cap ball left servo"); //This is the left capball servo
+        rightServoCapBall = hardwareMap.servo.get("cap ball right servo"); //This is the right capball servo
         //set variables to mode
         capBallMotor1.setDirection((DcMotor.Direction.FORWARD)); //This is the first capball motor being set to forwards mode
         capBallMotor2.setDirection((DcMotor.Direction.FORWARD)); //This is the second capball motor being set to forwards mode
 
         /*
-
         //BALL SHOOTER MOTORS
         //set ball shooter motors to be dcMotor variables
         ballShooterShooterMotor = hardwareMap.dcMotor.get("ball shooter shooter motor"); //This is the ball shooter's shooter motor
@@ -84,16 +100,14 @@ public class BasicTankDrive extends LinearOpMode {
         ballShooterShooterMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's SHOOTER motor being set to Forwards mode
         ballShooterLiftMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's LIFT motor being set to Forwards mode
         ballShooterIntakeMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's INTAKE motor being set to Forwards mode
-
-
         */
 
 
         //BEACONBUTTONPUSHERS
         //set beaconbuttonpushers to be their variables
-        //TODO: Set the positions to be correct for default
-        leftServoBeacon = new Servos("left servo", 0, 150, 0); //This is the left servo on the beacon button pusher
-        rightServoBeacon = new Servos("right servo", 0, 150, 0); //This is the right servo on the beacon button pusher
+        leftServoBeacon = hardwareMap.servo.get("left servo"); //This is the left servo on the beacon button pusher
+        rightServoBeacon = hardwareMap.servo.get("right servo"); //This is the right servo on the beacon button pusher
+
 
         //OPMODE CODE
         waitForStart();  //Wait for the game to start
@@ -119,31 +133,77 @@ public class BasicTankDrive extends LinearOpMode {
 
             //BEACONBUTTONPUSHER CONTROL CODE
             //If the left servo toggle (the left trigger) is pushed
-            if (gamepad1.left_trigger>0.4) {
+            if (gamepad1.left_trigger>0.4&&beaconTimeout>0) {
               //toggle the servo's position
-              leftServoBeacon.togglePosition();
+              if (leftServoBeaconExtended) { //Extended
+                  leftServoBeacon.setPosition(leftServoBeaconMin);
+              }
+              else {
+                  leftServoBeacon.setPosition(leftServoBeaconMax);
+              }
+              leftServoBeaconExtended = !leftServoBeaconExtended;
+              beaconRan = true;
             }
 
             //If the right servo toggle (the right trigger) is pushed
-            if (gamepad1.right_trigger>0.4) {
+            if (gamepad1.right_trigger>0.4&&beaconTimeout>0) {
               //toggle the servo's position
-              rightServoBeacon.togglePosition();
+                if (rightServoBeaconExtended) { //Extended
+                    rightServoBeacon.setPosition(rightServoBeaconMin);
+                }
+                else {
+                    rightServoBeacon.setPosition(rightServoBeaconMax);
+                }
+                rightServoBeaconExtended = !rightServoBeaconExtended;
+                beaconRan = true;
             }
+
+            if (beaconRan==true) {
+                beaconTimeout = -500;
+                beaconRan = false;
+            }
+
+            beaconTimeout++;
+
 
 
 
             //BALLCAPPING CONTROL CODE
             //capBAll
-            if(gamepad1.a){ //if the a button is pressed, move the cap lift
+            if(gamepad2.a){ //if the a button is pressed, move the cap lift
                 capBallMotor1.setPower(cappingSpeed);
                 capBallMotor2.setPower(cappingSpeed);
-            }else if(gamepad1.b){ //if the b button is pressed, do the opposite
+            }else if(gamepad2.b){ //if the b button is pressed, do the opposite
                 capBallMotor1.setPower(-cappingSpeed);
                 capBallMotor2.setPower(-cappingSpeed);
             }else{ //Dont do anything.
                 capBallMotor1.setPower(0);
                 capBallMotor2.setPower(0);
             }
+
+            //capBall servos
+            if (gamepad2.x&&cappingTimeout>0&&!changed) { //If the x button is pressed, invert the servos
+                if (rightServoCapBallExtended) { //Extended
+                    rightServoCapBall.setPosition(rightServoCapBallMin);
+                }
+                else {
+                    rightServoCapBall.setPosition(rightServoCapBallMax);
+                }
+                rightServoCapBallExtended = !rightServoCapBallExtended;
+                if (leftServoCapBallExtended) { //Extended
+                    leftServoCapBall.setPosition(leftServoCapBallMin);
+                }
+                else {
+                    leftServoCapBall.setPosition(leftServoCapBallMax);
+                }
+                leftServoCapBallExtended = !leftServoCapBallExtended;
+                cappingTimeout=-1000;
+                changed = true;
+            }
+
+            cappingTimeout++;
+
+
 
 
             /*
@@ -178,9 +238,8 @@ public class BasicTankDrive extends LinearOpMode {
             //OPMODE DEFAULT CODE
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
             //Datalog
-            telemetry.addData("Status", "Run Time: " + runtime.toString()); //Tell the user how long the code has been running
             telemetry.update();                                             //Pushes to terminal
-
         }
     }
+
 }
