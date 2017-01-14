@@ -16,7 +16,6 @@ public class BasicTankDrive extends LinearOpMode {
     private int timeout = 0; //Timeout flag, to make sure that inversion does not happen over and over
 
     //LIMITING FLAG FOR SPEED
-    //TODO: Figure out the actual needed speed limiting flag
     private int speedLimitingFlag = 2; //The code DIVIDES by this
 
     //INVERSION
@@ -45,9 +44,11 @@ public class BasicTankDrive extends LinearOpMode {
     private boolean changed = true;
 
     //SHOOTING
-    private DcMotor ballShooterShooterMotor = null; //This is the ball shooter's shooter motor
-    private DcMotor ballShooterLiftMotor = null; //This is the ball shooter's lifter motor
-    private DcMotor ballShooterIntakeMotor = null; //This is the ball shooter's intake box motor
+    private DcMotor shooterMotor = null;
+    private float shooterMotorPower = 1.0f;
+    private DcMotor intakeMotorOne = null;
+    private DcMotor intakeMotorTwo = null;
+    private float shooterIntakePower = 0.5f;
 
     //BEACONBUTTONPUSHERS
     private Servo leftServoBeacon; //This is the left beacon button pusher
@@ -67,7 +68,7 @@ public class BasicTankDrive extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         //DECLARE TELEMETRY
-        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status", "Program Initialized");
         telemetry.update();
 
         //DRIVING MOTORS
@@ -83,24 +84,17 @@ public class BasicTankDrive extends LinearOpMode {
         capBallMotor1 = hardwareMap.dcMotor.get("cap ball motor 1"); //This is a capball motor
         capBallMotor2 = hardwareMap.dcMotor.get("cap ball motor 2"); //This is a capball motor
         //set up capping servos
-        //TODO: Set the positions to be correct for default
         leftServoCapBall = hardwareMap.servo.get("cap ball left servo"); //This is the left capball servo
         rightServoCapBall = hardwareMap.servo.get("cap ball right servo"); //This is the right capball servo
         //set variables to mode
         capBallMotor1.setDirection((DcMotor.Direction.FORWARD)); //This is the first capball motor being set to forwards mode
         capBallMotor2.setDirection((DcMotor.Direction.FORWARD)); //This is the second capball motor being set to forwards mode
 
-        /*
+
         //BALL SHOOTER MOTORS
-        //set ball shooter motors to be dcMotor variables
-        ballShooterShooterMotor = hardwareMap.dcMotor.get("ball shooter shooter motor"); //This is the ball shooter's shooter motor
-        ballShooterLiftMotor = hardwareMap.dcMotor.get("ball shooter lifter motor"); //Ball shooter lifter motor
-        ballShooterIntakeMotor = hardwareMap.dcMotor.get("ball shooter intake motor"); //Ball shooter intake motor
-        //set ball shooter motors to be in the forwards mode
-        ballShooterShooterMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's SHOOTER motor being set to Forwards mode
-        ballShooterLiftMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's LIFT motor being set to Forwards mode
-        ballShooterIntakeMotor.setDirection((DcMotor.Direction.FORWARD)); //This is the ball shooter's INTAKE motor being set to Forwards mode
-        */
+        shooterMotor = hardwareMap.dcMotor.get("ball shooter shooter motor");
+        intakeMotorOne = hardwareMap.dcMotor.get("ball shooter intake motor 1");
+        intakeMotorTwo = hardwareMap.dcMotor.get("ball shooter intake motor 2");
 
 
         //BEACONBUTTONPUSHERS
@@ -209,36 +203,29 @@ public class BasicTankDrive extends LinearOpMode {
             }
 
 
-
-
-            /*
             //BALLSHOOTER CONTROL CODE
-            //TODO: Add in the proper values!!!!
-            //if the ball shooter motor toggle button is pressed
-            if (gamepad2.y) { //If the y button is pressed, activate the intake lift motor
-                ballShooterIntakeMotor.setPower(1);
+            if (gamepad2.dpad_up) { //Pull scoop up
+                intakeMotorTwo.setPower(shooterIntakePower);
+                intakeMotorOne.setPower(shooterIntakePower);
             }
-            if (gamepad2.a) { //If the a button is pressed, lower the intake motor lifter
-                ballShooterIntakeMotor.setPower(-1);
+            else if (gamepad2.dpad_down) { //scoop down
+                intakeMotorOne.setPower(-shooterIntakePower);
+                intakeMotorTwo.setPower(-shooterIntakePower);
             }
-
-            //if the ball shooter ramp motor button is pressed
-            if (gamepad2.x) { //If the x button is pressed, activate the lifter in one direction
-                ballShooterLiftMotor.setPower(1);
-            }
-            if (gamepad2.b) { //If the b button is pressed, activate the lifter in the opposite direction
-                ballShooterLiftMotor.setPower(-1);
+            else { //no movement
+                intakeMotorOne.setPower(0);
+                intakeMotorTwo.setPower(0);
             }
 
-            //if the ball shooter shooter button is pressed
-            if (gamepad2.dpad_up) { //If the up button is pressed on the dpad, turn the shooter one way
-                ballShooterShooterMotor.setPower(1);
+            if (gamepad2.dpad_right) { //Shoot rot1
+                shooterMotor.setPower(shooterMotorPower);
             }
-            if (gamepad2.dpad_down) { //If the down button is pressed on the dpad, turn the shooter the other way
-                ballShooterShooterMotor.setPower(-1);
+            else if (gamepad2.dpad_left) { //Shoot rot2
+                shooterMotor.setPower(-shooterIntakePower);
             }
-            */
-
+            else { //no move
+                shooterMotor.setPower(0);
+            }
 
             //OPMODE DEFAULT CODE
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
