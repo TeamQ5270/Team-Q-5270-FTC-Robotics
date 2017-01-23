@@ -34,14 +34,15 @@ public class BasicTankDrive extends LinearOpMode {
     private Servo leftServoCapBall = null; //This is one of the cap ball SERVOS
     private Servo rightServoCapBall = null; //This is one of the cap ball SERVOS
     private double leftServoCapBallMin = 0.5d;
-    private double leftServoCapBallMax = 0.3d;
+    private double leftServoCapBallMax = 0.1d;
     private boolean leftServoCapBallExtended = false;
     private double rightServoCapBallMin = 0.5d;
-    private double rightServoCapBallMax = 0.3d;
+    private double rightServoCapBallMax = 0.1d;
     private boolean rightServoCapBallExtended = false;
-    private float cappingSpeed = 0.25f; //This is the speed at which the capping motors will move
+    private float cappingSpeed = 1.00f; //This is the speed at which the capping motors will move
     private int cappingTimeout = 0;
     private boolean changed = true;
+
 
     //SHOOTING
     private DcMotor shooterMotor = null;
@@ -50,14 +51,15 @@ public class BasicTankDrive extends LinearOpMode {
     private DcMotor intakeMotorTwo = null;
     private float shooterIntakePower = 0.5f;
 
+
     //BEACONBUTTONPUSHERS
     private Servo leftServoBeacon; //This is the left beacon button pusher
     private Servo rightServoBeacon; //This is the right beacon button pusher
     private double leftServoBeaconMin = 0.0d;
-    private double leftServoBeaconMax = 0.3d;
+    private double leftServoBeaconMax = 1.0d;
     private boolean leftServoBeaconExtended = false;
     private double rightServoBeaconMin = 0.0d;
-    private double rightServoBeaconMax = 0.9d;
+    private double rightServoBeaconMax = 1.0d;
     private boolean rightServoBeaconExtended = false;
     private int beaconTimeout = 0;
     private boolean beaconRan = false;
@@ -91,10 +93,12 @@ public class BasicTankDrive extends LinearOpMode {
         capBallMotor2.setDirection((DcMotor.Direction.FORWARD)); //This is the second capball motor being set to forwards mode
 
 
+
         //BALL SHOOTER MOTORS
         shooterMotor = hardwareMap.dcMotor.get("ball shooter shooter motor");
         intakeMotorOne = hardwareMap.dcMotor.get("ball shooter intake motor 1");
-        intakeMotorTwo = hardwareMap.dcMotor.get("ball shooter intake motor 2");
+        //intakeMotorTwo = hardwareMap.dcMotor.get("ball shooter intake motor 2");
+
 
 
         //BEACONBUTTONPUSHERS
@@ -114,6 +118,9 @@ public class BasicTankDrive extends LinearOpMode {
             //This will make the robot move
             leftMotorDriving.setPower((-inverted*gamepad1.left_stick_y)/speedLimitingFlag);  //Set the left motor's power to be that of the gamepad's left stick
             rightMotorDriving.setPower((inverted*gamepad1.right_stick_y)/speedLimitingFlag); //Set the right motor's power to be that of the gamepad's right stick
+            telemetry.addData("Left motor: ", -gamepad1.left_stick_y);
+            telemetry.addData("Right motor: ", gamepad1.right_stick_y);
+            telemetry.update();
 
             //Toggle inversion if the invert button is pushed and the timeout is in the area that it needs to be in so that it can not be spammed.
             if (gamepad1.x&&timeout>=75) {         //If the inversion button is pushed
@@ -153,7 +160,7 @@ public class BasicTankDrive extends LinearOpMode {
             }
 
             if (beaconRan==true) {
-                beaconTimeout = -500;
+                beaconTimeout = -4500;
                 beaconRan = false;
             }
 
@@ -164,10 +171,13 @@ public class BasicTankDrive extends LinearOpMode {
 
             //BALLCAPPING CONTROL CODE
             //capBAll
+            /*
             if(gamepad2.a){ //if the a button is pressed, move the cap lift
                 capBallMotor1.setPower(cappingSpeed);
                 capBallMotor2.setPower(cappingSpeed);
-            }else if(gamepad2.b){ //if the b button is pressed, do the opposite
+            //}else if(gamepad2.b){ //if the b button is pressed, do the opposite
+            */
+            if (gamepad2.b) {
                 capBallMotor1.setPower(-cappingSpeed);
                 capBallMotor2.setPower(-cappingSpeed);
             }else{ //Dont do anything.
@@ -202,30 +212,45 @@ public class BasicTankDrive extends LinearOpMode {
                 rightServoCapBall.setPosition(rightServoCapBallMin);
             }
 
+            if (gamepad2.dpad_up) { //Servos up
+                leftServoCapBall.setPosition(leftServoCapBall.getPosition()-0.025f);
+                rightServoCapBall.setPosition(rightServoCapBall.getPosition()+.025f);
+            }
+            else if (gamepad2.dpad_down) { //Servos down
+                leftServoCapBall.setPosition(leftServoCapBall.getPosition()+0.025f);
+                rightServoCapBall.setPosition(rightServoCapBall.getPosition()-0.025f);
+            }
+            else { //No movement
+
+            }
+
+
 
             //BALLSHOOTER CONTROL CODE
-            if (gamepad2.dpad_up) { //Pull scoop up
-                intakeMotorTwo.setPower(shooterIntakePower);
+            if (gamepad2.left_bumper) { //Pull scoop up
+                //intakeMotorTwo.setPower(shooterIntakePower);
                 intakeMotorOne.setPower(shooterIntakePower);
             }
-            else if (gamepad2.dpad_down) { //scoop down
+            else if (gamepad2.left_trigger>0.4f) { //scoop down
                 intakeMotorOne.setPower(-shooterIntakePower);
-                intakeMotorTwo.setPower(-shooterIntakePower);
+                //intakeMotorTwo.setPower(-shooterIntakePower);
             }
             else { //no movement
                 intakeMotorOne.setPower(0);
-                intakeMotorTwo.setPower(0);
+                //intakeMotorTwo.setPower(0);
             }
 
-            if (gamepad2.dpad_right) { //Shoot rot1
+            /*
+            if (gamepad2.right_bumper) { //Shoot rot1
                 shooterMotor.setPower(shooterMotorPower);
             }
-            else if (gamepad2.dpad_left) { //Shoot rot2
+            else if (gamepad2.right_trigger>0.4f) { //Shoot rot2
                 shooterMotor.setPower(-shooterIntakePower);
             }
             else { //no move
                 shooterMotor.setPower(0);
             }
+            */
 
             //OPMODE DEFAULT CODE
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
@@ -233,5 +258,4 @@ public class BasicTankDrive extends LinearOpMode {
             telemetry.update();                                             //Pushes to terminal
         }
     }
-
 }
