@@ -89,7 +89,7 @@ public class BasicTankDrive extends LinearOpMode {
         leftServoCapBall = hardwareMap.servo.get("cap ball left servo"); //This is the left capball servo
         rightServoCapBall = hardwareMap.servo.get("cap ball right servo"); //This is the right capball servo
         //set variables to mode
-        capBallMotor1.setDirection((DcMotor.Direction.FORWARD)); //This is the first capball motor being set to forwards mode
+        capBallMotor1.setDirection((DcMotor.Direction.REVERSE)); //This is the first capball motor being set to forwards mode
         capBallMotor2.setDirection((DcMotor.Direction.FORWARD)); //This is the second capball motor being set to forwards mode
 
 
@@ -100,12 +100,12 @@ public class BasicTankDrive extends LinearOpMode {
         //intakeMotorTwo = hardwareMap.dcMotor.get("ball shooter intake motor 2");
 
 
-
+        /*
         //BEACONBUTTONPUSHERS
         //set beaconbuttonpushers to be their variables
         leftServoBeacon = hardwareMap.servo.get("left servo"); //This is the left servo on the beacon button pusher
         rightServoBeacon = hardwareMap.servo.get("right servo"); //This is the right servo on the beacon button pusher
-
+        */
 
         //OPMODE CODE
         waitForStart();  //Wait for the game to start
@@ -131,7 +131,7 @@ public class BasicTankDrive extends LinearOpMode {
             timeout++;
 
 
-
+            /*
             //BEACONBUTTONPUSHER CONTROL CODE
             //If the left servo toggle (the left trigger) is pushed
             if (gamepad1.left_trigger>0.4&&beaconTimeout>0) {
@@ -158,6 +158,7 @@ public class BasicTankDrive extends LinearOpMode {
                 rightServoBeaconExtended = !rightServoBeaconExtended;
                 beaconRan = true;
             }
+            */
 
             if (beaconRan==true) {
                 beaconTimeout = -4500;
@@ -171,13 +172,13 @@ public class BasicTankDrive extends LinearOpMode {
 
             //BALLCAPPING CONTROL CODE
             //capBAll
-            /*
+
             if(gamepad2.a){ //if the a button is pressed, move the cap lift
                 capBallMotor1.setPower(cappingSpeed);
                 capBallMotor2.setPower(cappingSpeed);
-            //}else if(gamepad2.b){ //if the b button is pressed, do the opposite
-            */
-            if (gamepad2.b) {
+            }else if(gamepad2.b){ //if the b button is pressed, do the opposite
+
+            //if (gamepad2.b) {
                 capBallMotor1.setPower(-cappingSpeed);
                 capBallMotor2.setPower(-cappingSpeed);
             }else{ //Dont do anything.
@@ -213,11 +214,11 @@ public class BasicTankDrive extends LinearOpMode {
             }
 
             if (gamepad2.dpad_up) { //Servos up
-                leftServoCapBall.setPosition(leftServoCapBall.getPosition()-0.025f);
+                leftServoCapBall.setPosition(leftServoCapBall.getPosition()+0.025f);
                 rightServoCapBall.setPosition(rightServoCapBall.getPosition()+.025f);
             }
             else if (gamepad2.dpad_down) { //Servos down
-                leftServoCapBall.setPosition(leftServoCapBall.getPosition()+0.025f);
+                leftServoCapBall.setPosition(leftServoCapBall.getPosition()-0.025f);
                 rightServoCapBall.setPosition(rightServoCapBall.getPosition()-0.025f);
             }
             else { //No movement

@@ -34,30 +34,20 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-/**
- * Demonstrates empty OpMode
- */
-
-@Autonomous(name = "MotorRPMTester", group = "Concept")
-public class MotorRPMTester extends OpMode {
+@Autonomous(name = "Color Sensor Display")
+public class ColorSensorDisplay extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
 
-  int rotations = 0;
-  int timer = 0;
-  int lastRotation = 0;
-
-  DcMotor testing = null;
+  private ColorSensor colorSensor;
 
   @Override
   public void init() {
     telemetry.addData("Status", "Initialized");
-    testing = hardwareMap.dcMotor.get("testingMotor");
-    testing.setDirection(DcMotor.Direction.FORWARD);
+    colorSensor = hardwareMap.colorSensor.get("Color Sensor");
   }
 
   /*
@@ -66,7 +56,6 @@ public class MotorRPMTester extends OpMode {
      */
   @Override
   public void init_loop() {
-
   }
 
   /*
@@ -76,6 +65,7 @@ public class MotorRPMTester extends OpMode {
   @Override
   public void start() {
     runtime.reset();
+    colorSensor.enableLed(false);
   }
 
   /*
@@ -84,18 +74,9 @@ public class MotorRPMTester extends OpMode {
    */
   @Override
   public void loop() {
-    telemetry.addData("Status", "Run Time: " + runtime.toString());
-
-    if (runtime.seconds()>=10) {
-      telemetry.addData("The speed is about ", Integer.toString((testing.getCurrentPosition()/360)*6)," RPM, at power level 1");
-      testing.setPower(0);
-    }
-    else {
-      testing.setPower(1);
-      if (testing.getCurrentPosition()<lastRotation) {
-        rotations++;
-      }
-      lastRotation = testing.getCurrentPosition();
-    }
+    telemetry.addData("Status:", "Run Time: " + runtime.toString());
+    telemetry.addData("Red: ", colorSensor.red());
+    telemetry.addData("Green: ", colorSensor.green());
+    telemetry.addData("Blue: ", colorSensor.blue());
   }
 }
